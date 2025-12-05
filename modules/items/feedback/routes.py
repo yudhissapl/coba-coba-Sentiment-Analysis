@@ -46,6 +46,14 @@ def list_feedback(
         query = query.filter(models.Feedback.sentiment == sentiment)
     return query.all()
 
+@router.get("/sample", response_model=List[schemas.FeedbackRead])
+def get_sample_feedback(db: Session = Depends(get_db)):
+    """
+    Mengembalikan 10 data feedback pertama dari DB.
+    Ini bukan baca CSV, tapi data yang dipakai API.
+    """
+    rows = db.query(models.Feedback).limit(10).all()
+    return rows
 
 @router.get("/{feedback_id}", response_model=schemas.FeedbackRead)
 def get_feedback(feedback_id: int, db: Session = Depends(get_db)):
